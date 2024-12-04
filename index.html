@@ -142,7 +142,6 @@ const db = getFirestore(app);
 document.addEventListener('DOMContentLoaded', () => {
     const signInButton = document.getElementById('sign-in-button');
     const signOutButton = document.getElementById('sign-out-button');
-    const userInfo = document.getElementById('user-info');
     const journal = document.getElementById('journal-container');
     const reversedCheckbox = document.getElementById('reversed-checkbox');
 
@@ -310,10 +309,6 @@ alert('Failed to save your entry. Please try again.');
 <button id="sign-in-button">Sign in with Google</button>
 <button id="sign-out-button" style="display: none;">Sign Out</button>
 </div>
-
-<section id="user-info" style="display: none;">
-<h2>Welcome to your Tarot Journal</h2>
-</section>
 
 <div id="journal-container">
 <section>
