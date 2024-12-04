@@ -235,11 +235,13 @@ const docRef = doc(db, 'users', userId, 'entries', date);
 const docSnap = await getDoc(docRef);
 if (docSnap.exists()) {
 const data = docSnap.data();
+document.querySelector('textarea[placeholder="What was your response to today\'s spread?"]').value = data.spreadResponse;
 document.querySelector('textarea[placeholder="What\'s your focus or intention for the day?"]').value = data.morningIntentions;
 document.querySelector('textarea[placeholder="How did the day unfold? What lessons or insights emerged?"]').value = data.eveningReflection;
 document.getElementById('tarot-card-select').value = data.cardValue;
 updateTarotCardImage(data.cardValue);
 } else {
+document.querySelector('textarea[placeholder="What was your response to today\'s spread?"]').value = '';
 document.querySelector('textarea[placeholder="What\'s your focus or intention for the day?"]').value = '';
 document.querySelector('textarea[placeholder="How did the day unfold? What lessons or insights emerged?"]').value = '';
 document.getElementById('tarot-card-select').value = 'the_fool';
@@ -272,6 +274,7 @@ alert('Please sign in to save your entry.');
 return;
 }
 
+const spreadResponse = document.querySelector('textarea[placeholder="What was your response to today\'s spread?"]').value;
 const morningIntentions = document.querySelector('textarea[placeholder="What\'s your focus or intention for the day?"]').value;
 const eveningReflection = document.querySelector('textarea[placeholder="How did the day unfold? What lessons or insights emerged?"]').value;
 const cardValue = document.getElementById('tarot-card-select').value;
@@ -279,6 +282,7 @@ const date = document.getElementById('entry-date-picker').value;
 
 try {
 await setDoc(doc(db, 'users', user.uid, 'entries', date), {
+spreadResponse,
 morningIntentions,
 eveningReflection,
 cardValue,
@@ -405,6 +409,11 @@ alert('Failed to save your entry. Please try again.');
 <label><input type="checkbox" id="reversed-checkbox"> Reversed</label>
 <p><img src="https://upload.wikimedia.org/wikipedia/commons/0/00/RWS_Tarot_00_Fool.jpg/150px-RWS_Tarot_00_Fool.jpg" alt="The Fool"></p>
 </section>
+<section>
+    <h2>Card Reflections</h2>
+    <textarea rows="4" placeholder="What was your response to today\'s spread?"></textarea>
+    </section>
+    <section>
 <section>
 <h2>Morning Intentions</h2>
 <textarea rows="4" placeholder="What's your focus or intention for the day?"></textarea>
