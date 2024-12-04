@@ -45,6 +45,7 @@ button:hover {
 }
 #journal-container {
     display: none;
+    padding: 5%;
 }
 h2 {
     color: #d1a954;
