@@ -148,12 +148,10 @@ document.addEventListener('DOMContentLoaded', () => {
     auth.onAuthStateChanged((user) => {
     if (user) {
     journal.style.display = 'block';
-    userInfo.style.display = 'block';
     signInButton.style.display = 'none';
     signOutButton.style.display = 'inline-block';
     } else {
     journal.style.display = 'none';
-    userInfo.style.display = 'none';
     signInButton.style.display = 'inline-block';
     signOutButton.style.display = 'none';
     }
@@ -164,7 +162,6 @@ document.addEventListener('DOMContentLoaded', () => {
     .then((result) => {
     const user = result.user;
     journal.style.display = 'block';
-    userInfo.style.display = 'block';
     signInButton.style.display = 'none';
     signOutButton.style.display = 'inline-block';
     })
@@ -178,7 +175,6 @@ document.addEventListener('DOMContentLoaded', () => {
     signOut(auth)
     .then(() => {
     journal.style.display = 'none';
-    userInfo.style.display = 'none';
     signInButton.style.display = 'inline-block';
     signOutButton.style.display = 'none';
     })
