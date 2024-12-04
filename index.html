@@ -182,6 +182,7 @@ const data = docSnap.data();
 document.querySelector('textarea[placeholder="What\'s your focus or intention for the day?"]').value = data.morningIntentions;
 document.querySelector('textarea[placeholder="How did the day unfold? What lessons or insights emerged?"]').value = data.eveningReflection;
 document.getElementById('tarot-card-select').value = data.cardValue;
+document.getElementById('reversed-checkbox').checked = data.isReversed || false;
 updateTarotCardImage(data.cardValue);
 } else {
 document.querySelector('textarea[placeholder="What\'s your focus or intention for the day?"]').value = '';
@@ -208,33 +209,34 @@ tarotCardImage.alt = 'Tarot Card Not Available';
 }
 
 function initializeSaveEntry() {
-const saveEntryButton = document.querySelector('.submit-button');
-saveEntryButton.addEventListener('click', async () => {
-const user = auth.currentUser;
-if (!user) {
-alert('Please sign in to save your entry.');
-return;
-}
+    const saveEntryButton = document.querySelector('.submit-button');
+    saveEntryButton.addEventListener('click', async () => {
+    const user = auth.currentUser;
+    if (!user) {
+    alert('Please sign in to save your entry.');
+    return;
+    }
 
-const morningIntentions = document.querySelector('textarea[placeholder="What\'s your focus or intention for the day?"]').value;
-const eveningReflection = document.querySelector('textarea[placeholder="How did the day unfold? What lessons or insights emerged?"]').value;
-const cardValue = document.getElementById('tarot-card-select').value;
+    const morningIntentions = document.querySelector('textarea[placeholder="What\'s your focus or intention for the day?"]').value;
+    const eveningReflection = document.querySelector('textarea[placeholder="How did the day unfold? What lessons or insights emerged?"]').value;
+    const cardValue = document.getElementById('tarot-card-select').value;
+    const isReversed = document.getElementById('reversed-checkbox').checked;
+    const date = new Date().toLocaleDateString('en-CA'); // Use YYYY-MM-DD format
 
-const date = new Date().toLocaleDateString('en-CA'); // Use YYYY-MM-DD format
-
-try {
-await setDoc(doc(db, 'users', user.uid, 'entries', date), {
-morningIntentions,
-eveningReflection,
-cardValue,
-timestamp: new Date()
-});
-alert('Entry saved successfully!');
-} catch (error) {
-console.error('Error saving entry: ', error);
-alert('Failed to save your entry. Please try again.');
-}
-});
+    try {
+    await setDoc(doc(db, 'users', user.uid, 'entries', date), {
+    morningIntentions,
+    eveningReflection,
+    cardValue,
+    isReversed,
+    timestamp: new Date()
+    });
+    alert('Entry saved successfully!');
+    } catch (error) {
+    console.error('Error saving entry: ', error);
+    alert('Failed to save your entry. Please try again.');
+    }
+    });
 }
 </script>
 <link rel="stylesheet" href="styles.css">
