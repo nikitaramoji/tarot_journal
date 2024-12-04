@@ -194,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     reversedCheckbox.addEventListener('change', () => {
         const tarotCardSelect = document.getElementById('tarot-card-select');
-        const isReversed = document.getElementById('reversed-checkbox').value;
+        const isReversed = document.getElementById('reversed-checkbox').checked;
         alert(isReversed);
         document.querySelector('#journal-container img').style.transform = isReversed ? 'rotate(180deg)' : 'rotate(0deg)';
     });
@@ -244,7 +244,7 @@ const data = docSnap.data();
 document.querySelector('textarea[placeholder="What was your response to today\'s spread? Any thoughts going into today?"]').value = data.morningIntentions;
 document.querySelector('textarea[placeholder="How did the day unfold? What lessons or insights emerged?"]').value = data.eveningReflection;
 document.getElementById('tarot-card-select').value = data.cardValue;
-document.getElementById('reversed-checkbox').value = data.isReversed;
+document.getElementById('reversed-checkbox').checked = data.isReversed;
 updateTarotCardImage(data.cardValue, data.isReversed);
 } else {
 document.querySelector('textarea[placeholder="What was your response to today\'s spread? Any thoughts going into today?"]').value = '';
@@ -283,7 +283,7 @@ return;
 const morningIntentions = document.querySelector('textarea[placeholder="What was your response to today\'s spread? Any thoughts going into today?"]').value;
 const eveningReflection = document.querySelector('textarea[placeholder="How did the day unfold? What lessons or insights emerged?"]').value;
 const cardValue = document.getElementById('tarot-card-select').value;
-const isReversed = document.getElementById('reversed-checkbox').value;
+const isReversed = document.getElementById('reversed-checkbox').checked;
 const date = document.getElementById('entry-date-picker').value; 
 
 try {
