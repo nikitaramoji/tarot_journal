@@ -181,12 +181,12 @@ document.querySelector('textarea[placeholder="What\'s your focus or intention fo
 document.querySelector('textarea[placeholder="How did the day unfold? What lessons or insights emerged?"]').value = data.eveningReflection;
 document.getElementById('tarot-card-select').value = data.cardValue;
 document.getElementById('reversed-checkbox').checked = data.isReversed || false;
-updateTarotCardImage(data.cardValue);
+updateTarotCardImage(data.cardValue, data.isReversed);
 } else {
 document.querySelector('textarea[placeholder="What\'s your focus or intention for the day?"]').value = '';
 document.querySelector('textarea[placeholder="How did the day unfold? What lessons or insights emerged?"]').value = '';
 document.getElementById('tarot-card-select').value = 'the_fool';
-updateTarotCardImage('the_fool');
+updateTarotCardImage('the_fool', false);
 }
 } catch (error) {
 console.error('Error fetching entry: ', error);
@@ -194,12 +194,13 @@ alert('Failed to load the entry. Please try again.');
 }
 }
 
-function updateTarotCardImage(cardValue) {
+function updateTarotCardImage(cardValue, isReversed) {
 const tarotCardImage = document.querySelector('#journal-container img');
 const imagePath = getCardImagePath(cardValue);
 if (imagePath) {
 tarotCardImage.src = `https://upload.wikimedia.org/wikipedia/commons/thumb/${imagePath}`;
 tarotCardImage.alt = `${document.getElementById('tarot-card-select').options[document.getElementById('tarot-card-select').selectedIndex].text} Tarot Card`;
+tarotCardImage.style.transform = isReversed ? 'rotate(180deg)' : 'rotate(0deg)'
 } else {
 tarotCardImage.src = '';
 tarotCardImage.alt = 'Tarot Card Not Available';
