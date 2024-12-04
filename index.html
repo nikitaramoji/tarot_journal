@@ -2,322 +2,306 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2025: A Year of Reflection and Insight</title>
-    <script type="module">
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
-        document.addEventListener('DOMContentLoaded', () => {
-            const reversedCheckbox = document.getElementById('reversed-checkbox');
-            reversedCheckbox.addEventListener('change', () => {
-                updateCardOrientation();
-            });
-            initializeSaveEntry();
-            auth.onAuthStateChanged(async (user) => {
-                if (user) {
-                    await loadEntryForSelectedDate();
-                }
-            });
-            initializeSaveEntry();
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2025: A Year of Reflection and Insight</title>
+<link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/8/8f/Three_of_Cups%2C_Waite-Smith_Tarot_Deck%2C_Yale_University.jpg">
+<script type="module">
+import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
+document.addEventListener('DOMContentLoaded', () => {
+const entryDatePicker = document.getElementById('entry-date-picker');
+entryDatePicker.value = new Date().toLocaleDateString('en-CA'); // Set to current date
+entryDatePicker.addEventListener('input', loadEntryForSelectedDate);
+initializeSaveEntry();
+auth.onAuthStateChanged(async (user) => {
+if (user) {
+await loadEntryForSelectedDate();
+}
+});
+initializeSaveEntry();
 
-            const tarotCardSelect = document.getElementById('tarot-card-select');
-            const tarotCardImage = document.querySelector('#journal-container img');
+const tarotCardSelect = document.getElementById('tarot-card-select');
+const tarotCardImage = document.querySelector('#journal-container img');
 
-            tarotCardSelect.addEventListener('change', (event) => {
-                const cardValue = event.target.value;
-                const imagePath = getCardImagePath(cardValue);
-                const tarotCardImage = document.getElementById('tarot-card-image');
-                if (imagePath) {
-                    tarotCardImage.src = `https://upload.wikimedia.org/wikipedia/commons/thumb/${imagePath}`;
-                    tarotCardImage.alt = `${event.target.options[event.target.selectedIndex].text} Tarot Card`;
-                
-                updateCardOrientation();
-            });
-        });
+tarotCardSelect.addEventListener('change', (event) => {
+const cardValue = event.target.value;
+const imagePath = getCardImagePath(cardValue);
+if (imagePath) {
+tarotCardImage.src = `https://upload.wikimedia.org/wikipedia/commons/thumb/${imagePath}`;
+tarotCardImage.alt = `${event.target.options[event.target.selectedIndex].text} Tarot Card`;
+} else {
+tarotCardImage.src = '';
+tarotCardImage.alt = 'Tarot Card Not Available';
+}
+tarotCardImage.alt = `${event.target.options[event.target.selectedIndex].text} Tarot Card`;
+});
+});
 
-        function getCardImagePath(cardValue) {
-            const cardPaths = {
-                'the_fool': '0/00/RWS_Tarot_00_Fool.jpg/150px-RWS_Tarot_00_Fool.jpg',
-                'the_magician': 'f/ff/RWS_Tarot_01_Magician.jpg/150px-RWS_Tarot_01_Magician.jpg',
-                'the_high_priestess': '8/88/RWS_Tarot_02_High_Priestess.jpg/150px-RWS_Tarot_02_High_Priestess.jpg',
-                'the_empress': 'd/d2/RWS_Tarot_03_Empress.jpg/150px-RWS_Tarot_03_Empress.jpg',
-                'the_emperor': 'd/d7/RWS_Tarot_04_Emperor.jpg/150px-RWS_Tarot_04_Emperor.jpg',
-                'the_hierophant': '8/8d/RWS_Tarot_05_Hierophant.jpg/150px-RWS_Tarot_05_Hierophant.jpg',
-                'the_lovers': '3/3a/RWS_Tarot_06_Lovers.jpg/150px-RWS_Tarot_06_Lovers.jpg',
-                'the_chariot': '8/88/RWS_Tarot_07_Chariot.jpg/150px-RWS_Tarot_07_Chariot.jpg',
-                'strength': 'f/f5/RWS_Tarot_08_Strength.jpg/150px-RWS_Tarot_08_Strength.jpg',
-                'the_hermit': '4/4d/RWS_Tarot_09_Hermit.jpg/150px-RWS_Tarot_09_Hermit.jpg',
-                'wheel_of_fortune': '3/3c/RWS_Tarot_10_Wheel_of_Fortune.jpg/150px-RWS_Tarot_10_Wheel_of_Fortune.jpg',
-                'justice': 'e/e0/RWS_Tarot_11_Justice.jpg/150px-RWS_Tarot_11_Justice.jpg',
-                'the_hanged_man': '2/2b/RWS_Tarot_12_Hanged_Man.jpg/150px-RWS_Tarot_12_Hanged_Man.jpg',
-                'death': 'd/d7/RWS_Tarot_13_Death.jpg/150px-RWS_Tarot_13_Death.jpg',
-                'temperance': 'f/f8/RWS_Tarot_14_Temperance.jpg/150px-RWS_Tarot_14_Temperance.jpg',
-                'the_devil': '5/55/RWS_Tarot_15_Devil.jpg/150px-RWS_Tarot_15_Devil.jpg',
-                'the_tower': '6/63/RWS_Tarot_16_Tower.jpg/150px-RWS_Tarot_16_Tower.jpg',
-                'the_star': 'd/db/RWS_Tarot_17_Star.jpg/150px-RWS_Tarot_17_Star.jpg',
-                'the_moon': '7/7f/RWS_Tarot_18_Moon.jpg/150px-RWS_Tarot_18_Moon.jpg',
-                'the_sun': '1/17/RWS_Tarot_19_Sun.jpg/150px-RWS_Tarot_19_Sun.jpg',
-                'judgement': 'd/dd/RWS_Tarot_20_Judgement.jpg/150px-RWS_Tarot_20_Judgement.jpg',
-                'the_world': 'f/ff/RWS_Tarot_21_World.jpg/150px-RWS_Tarot_21_World.jpg'
-            };
-            return cardPaths[cardValue] || '';
-        }
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-auth.js";
+function getCardImagePath(cardValue) {
+const cardPaths = {
+'the_fool': '0/00/RWS_Tarot_00_Fool.jpg/150px-RWS_Tarot_00_Fool.jpg',
+'the_magician': 'f/ff/RWS_Tarot_01_Magician.jpg/150px-RWS_Tarot_01_Magician.jpg',
+'the_high_priestess': '8/88/RWS_Tarot_02_High_Priestess.jpg/150px-RWS_Tarot_02_High_Priestess.jpg',
+'the_empress': 'd/d2/RWS_Tarot_03_Empress.jpg/150px-RWS_Tarot_03_Empress.jpg',
+'the_emperor': 'd/d7/RWS_Tarot_04_Emperor.jpg/150px-RWS_Tarot_04_Emperor.jpg',
+'the_hierophant': '8/8d/RWS_Tarot_05_Hierophant.jpg/150px-RWS_Tarot_05_Hierophant.jpg',
+'the_lovers': '3/3a/RWS_Tarot_06_Lovers.jpg/150px-RWS_Tarot_06_Lovers.jpg',
+'the_chariot': '8/88/RWS_Tarot_07_Chariot.jpg/150px-RWS_Tarot_07_Chariot.jpg',
+'strength': 'f/f5/RWS_Tarot_08_Strength.jpg/150px-RWS_Tarot_08_Strength.jpg',
+'the_hermit': '4/4d/RWS_Tarot_09_Hermit.jpg/150px-RWS_Tarot_09_Hermit.jpg',
+'wheel_of_fortune': '3/3c/RWS_Tarot_10_Wheel_of_Fortune.jpg/150px-RWS_Tarot_10_Wheel_of_Fortune.jpg',
+'justice': 'e/e0/RWS_Tarot_11_Justice.jpg/150px-RWS_Tarot_11_Justice.jpg',
+'the_hanged_man': '2/2b/RWS_Tarot_12_Hanged_Man.jpg/150px-RWS_Tarot_12_Hanged_Man.jpg',
+'death': 'd/d7/RWS_Tarot_13_Death.jpg/150px-RWS_Tarot_13_Death.jpg',
+'temperance': 'f/f8/RWS_Tarot_14_Temperance.jpg/150px-RWS_Tarot_14_Temperance.jpg',
+'the_devil': '5/55/RWS_Tarot_15_Devil.jpg/150px-RWS_Tarot_15_Devil.jpg',
+'the_tower': '6/63/RWS_Tarot_16_Tower.jpg/150px-RWS_Tarot_16_Tower.jpg',
+'the_star': 'd/db/RWS_Tarot_17_Star.jpg/150px-RWS_Tarot_17_Star.jpg',
+'the_moon': '7/7f/RWS_Tarot_18_Moon.jpg/150px-RWS_Tarot_18_Moon.jpg',
+'the_sun': '1/17/RWS_Tarot_19_Sun.jpg/150px-RWS_Tarot_19_Sun.jpg',
+'judgement': 'd/dd/RWS_Tarot_20_Judgement.jpg/150px-RWS_Tarot_20_Judgement.jpg',
+'the_world': 'f/ff/RWS_Tarot_21_World.jpg/150px-RWS_Tarot_21_World.jpg'
+};
+return cardPaths[cardValue] || '';
+}
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-auth.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDmlkmqRxQCohuSzLV6oXXSkgiRqZIgRSw",
-            authDomain: "tarot-journal-a37af.firebaseapp.com",
-            projectId: "tarot-journal-a37af",
-            storageBucket: "tarot-journal-a37af.firebasestorage.app",
-            messagingSenderId: "254712606286",
-            appId: "1:254712606286:web:26c4dafa31831c98985d1f",
-            measurementId: "G-NKG8B5348L"
-        };
+const firebaseConfig = {
+apiKey: "AIzaSyDmlkmqRxQCohuSzLV6oXXSkgiRqZIgRSw",
+authDomain: "tarot-journal-a37af.firebaseapp.com",
+projectId: "tarot-journal-a37af",
+storageBucket: "tarot-journal-a37af.firebasestorage.app",
+messagingSenderId: "254712606286",
+appId: "1:254712606286:web:26c4dafa31831c98985d1f",
+measurementId: "G-NKG8B5348L"
+};
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
-        const db = getFirestore(app);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+const db = getFirestore(app);
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const signInButton = document.getElementById('sign-in-button');
-            const signOutButton = document.getElementById('sign-out-button');
-            const userInfo = document.getElementById('user-info');
-            const journal = document.getElementById('journal-container');
+document.addEventListener('DOMContentLoaded', () => {
+const signInButton = document.getElementById('sign-in-button');
+const signOutButton = document.getElementById('sign-out-button');
+const userInfo = document.getElementById('user-info');
+const journal = document.getElementById('journal-container');
 
-            auth.onAuthStateChanged((user) => {
-                if (user) {
-                    journal.style.display = 'block';
-                    userInfo.style.display = 'block';
-                    signInButton.style.display = 'none';
-                    signOutButton.style.display = 'inline-block';
-                    document.getElementById('user-name').textContent = `Welcome, ${user.displayName}`;
-                    document.getElementById('user-email').textContent = `Email: ${user.email}`;
-                } else {
-                    journal.style.display = 'none';
-                    userInfo.style.display = 'none';
-                    signInButton.style.display = 'inline-block';
-                    signOutButton.style.display = 'none';
-                }
-            });
+auth.onAuthStateChanged((user) => {
+if (user) {
+journal.style.display = 'block';
+userInfo.style.display = 'block';
+signInButton.style.display = 'none';
+signOutButton.style.display = 'inline-block';
+document.getElementById('user-name').textContent = `Welcome, ${user.displayName}`;
+document.getElementById('user-email').textContent = `Email: ${user.email}`;
+} else {
+journal.style.display = 'none';
+userInfo.style.display = 'none';
+signInButton.style.display = 'inline-block';
+signOutButton.style.display = 'none';
+}
+});
 
-            signInButton.addEventListener('click', () => {
-                signInWithPopup(auth, provider)
-                    .then((result) => {
-                        const user = result.user;
-                        journal.style.display = 'block';
-                        userInfo.style.display = 'block';
-                        signInButton.style.display = 'none';
-                        signOutButton.style.display = 'inline-block';
-                        document.getElementById('user-name').textContent = `Welcome, ${user.displayName}`;
-                        document.getElementById('user-email').textContent = `Email: ${user.email}`;
-                    })
-                    .catch((error) => {
-                        console.error('Sign-in error:', error.message);
-                        alert('Sign-in error: ' + error.message);
-                    });
-            });
+signInButton.addEventListener('click', () => {
+signInWithPopup(auth, provider)
+.then((result) => {
+const user = result.user;
+journal.style.display = 'block';
+userInfo.style.display = 'block';
+signInButton.style.display = 'none';
+signOutButton.style.display = 'inline-block';
+document.getElementById('user-name').textContent = `Welcome, ${user.displayName}`;
+document.getElementById('user-email').textContent = `Email: ${user.email}`;
+})
+.catch((error) => {
+console.error('Sign-in error:', error.message);
+alert('Sign-in error: ' + error.message);
+});
+});
 
-            signOutButton.addEventListener('click', () => {
-                signOut(auth)
-                    .then(() => {
-                        journal.style.display = 'none';
-                        userInfo.style.display = 'none';
-                        signInButton.style.display = 'inline-block';
-                        signOutButton.style.display = 'none';
-                    })
-                    .catch((error) => {
-                        console.error('Sign-out error:', error.message);
-                        alert('Sign-out error: ' + error.message);
-                    });
-            });
-        });
-    const textCardButton = document.createElement('button');
-        textCardButton.textContent = 'Text Today\'s Card';
-        textCardButton.className = 'submit-button';
-        document.getElementById('journal-container').appendChild(textCardButton);
+signOutButton.addEventListener('click', () => {
+signOut(auth)
+.then(() => {
+journal.style.display = 'none';
+userInfo.style.display = 'none';
+signInButton.style.display = 'inline-block';
+signOutButton.style.display = 'none';
+})
+.catch((error) => {
+console.error('Sign-out error:', error.message);
+alert('Sign-out error: ' + error.message);
+});
+});
+});
+const textCardButton = document.createElement('button');
+textCardButton.textContent = 'Text Today\'s Card';
+textCardButton.className = 'submit-button';
+document.getElementById('journal-container').appendChild(textCardButton);
 
-        textCardButton.addEventListener('click', () => {
-            const tarotCardSelect = document.getElementById('tarot-card-select');
-            const tarotCardImage = document.querySelector('#journal-container img');
-            const cardName = tarotCardSelect.options[tarotCardSelect.selectedIndex].text;
-            sendSMS(`Today's tarot card is ${cardName}: ${tarotCardImage.src}`);
-        });
-        
-        textCardButton.addEventListener('click', () => {
-            const tarotCardSelect = document.getElementById('tarot-card-select');
-            const tarotCardImage = document.querySelector('#journal-container img');
-            const cardName = tarotCardSelect.options[tarotCardSelect.selectedIndex].text;
-            sendSMS('Today\'s tarot card is ' + tarotCardImage.src);
-            //sendSMS(`https://upload.wikimedia.org/wikipedia/commons/thumb/${getCardImagePath(cardValue)}');
-        });
+textCardButton.addEventListener('click', () => {
+const tarotCardSelect = document.getElementById('tarot-card-select');
+const tarotCardImage = document.querySelector('#journal-container img');
+const cardName = tarotCardSelect.options[tarotCardSelect.selectedIndex].text;
+sendSMS(`Today's tarot card is ${cardName}: ${tarotCardImage.src}`);
+});
 
-        function sendSMS(message) {
-            const smsLink = `sms:?&body=${encodeURIComponent(message)}`;
-            window.location.href = smsLink;
-        }
+textCardButton.addEventListener('click', () => {
+const tarotCardSelect = document.getElementById('tarot-card-select');
+const tarotCardImage = document.querySelector('#journal-container img');
+const cardName = tarotCardSelect.options[tarotCardSelect.selectedIndex].text;
+sendSMS('Today\'s tarot card is ' + tarotCardImage.src);
+//sendSMS(`https://upload.wikimedia.org/wikipedia/commons/thumb/${getCardImagePath(cardValue)}');
+});
 
-                async function loadEntryForSelectedDate() {
-            const user = auth.currentUser;
-            if (!user) {
-                alert('Please sign in to view your entries.');
-                return;
-            }
-            const selectedDate = document.getElementById('entry-date-picker').value;
-            if (!selectedDate) {
-                return;
-            }
-            await getEntryForDate(user.uid, selectedDate);
-        }
+function sendSMS(message) {
+const smsLink = `sms:?&body=${encodeURIComponent(message)}`;
+window.location.href = smsLink;
+}
 
-        async function getEntryForDate(userId, date) {
-    try {
-        const docRef = doc(db, 'users', userId, 'entries', date);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-            const data = docSnap.data();
-            document.querySelector('textarea[placeholder="What\'s your focus or intention for the day?"]').value = data.morningIntentions;
-            document.querySelector('textarea[placeholder="How did the day unfold? What lessons or insights emerged?"]').value = data.eveningReflection;
-            document.getElementById('tarot-card-select').value = data.cardValue;
-            document.getElementById('reversed-checkbox').checked = data.isReversed || false;
-            updateTarotCardImage(data.cardValue);
-        } else {
-            document.querySelector('textarea[placeholder="What\'s your focus or intention for the day?"]').value = '';
-            document.querySelector('textarea[placeholder="How did the day unfold? What lessons or insights emerged?"]').value = '';
-            document.getElementById('tarot-card-select').value = 'the_fool';
-            updateTarotCardImage('the_fool');
-        }
-    } catch (error) {
-        console.error('Error fetching entry: ', error);
-        alert('Failed to load the entry. Please try again.');
-    }
+async function loadEntryForSelectedDate() {
+const user = auth.currentUser;
+if (!user) {
+alert('Please sign in to view your entries.');
+return;
+}
+const selectedDate = document.getElementById('entry-date-picker').value;
+if (!selectedDate) {
+return;
+}
+await getEntryForDate(user.uid, selectedDate);
+}
+
+async function getEntryForDate(userId, date) {
+try {
+const docRef = doc(db, 'users', userId, 'entries', date);
+const docSnap = await getDoc(docRef);
+if (docSnap.exists()) {
+const data = docSnap.data();
+document.querySelector('textarea[placeholder="What\'s your focus or intention for the day?"]').value = data.morningIntentions;
+document.querySelector('textarea[placeholder="How did the day unfold? What lessons or insights emerged?"]').value = data.eveningReflection;
+document.getElementById('tarot-card-select').value = data.cardValue;
+updateTarotCardImage(data.cardValue);
+} else {
+document.querySelector('textarea[placeholder="What\'s your focus or intention for the day?"]').value = '';
+document.querySelector('textarea[placeholder="How did the day unfold? What lessons or insights emerged?"]').value = '';
+document.getElementById('tarot-card-select').value = 'the_fool';
+updateTarotCardImage('the_fool');
+}
+} catch (error) {
+console.error('Error fetching entry: ', error);
+alert('Failed to load the entry. Please try again.');
+}
 }
 
 function updateTarotCardImage(cardValue) {
-    const tarotCardImage = document.getElementById('tarot-card-image');
-    const imagePath = getCardImagePath(cardValue);
-    if (imagePath) {
-        tarotCardImage.src = `https://upload.wikimedia.org/wikipedia/commons/thumb/${imagePath}`;
-        tarotCardImage.alt = `${document.getElementById('tarot-card-select').options[document.getElementById('tarot-card-select').selectedIndex].text} Tarot Card`;
-    } else {
-        tarotCardImage.src = '';
-        tarotCardImage.alt = 'Tarot Card Not Available';
-    }
-    updateCardOrientation();
-}
-
-function updateCardOrientation() {
-    const tarotCardImage = document.getElementById('tarot-card-image');
-    const isReversed = document.getElementById('reversed-checkbox').checked;
-    tarotCardImage.style.transform = isReversed ? 'rotate(180deg)' : 'rotate(0deg)';
+const tarotCardImage = document.querySelector('#journal-container img');
+const imagePath = getCardImagePath(cardValue);
+if (imagePath) {
+tarotCardImage.src = `https://upload.wikimedia.org/wikipedia/commons/thumb/${imagePath}`;
+tarotCardImage.alt = `${document.getElementById('tarot-card-select').options[document.getElementById('tarot-card-select').selectedIndex].text} Tarot Card`;
 } else {
-        tarotCardImage.src = '';
-        tarotCardImage.alt = 'Tarot Card Not Available';
-    }
+tarotCardImage.src = '';
+tarotCardImage.alt = 'Tarot Card Not Available';
+}
 }
 
-        function initializeSaveEntry() {
-            const saveEntryButton = document.querySelector('.submit-button');
-            saveEntryButton.addEventListener('click', async () => {
-                const user = auth.currentUser;
-                if (!user) {
-                    alert('Please sign in to save your entry.');
-                    return;
-                }
+function initializeSaveEntry() {
+const saveEntryButton = document.querySelector('.submit-button');
+saveEntryButton.addEventListener('click', async () => {
+const user = auth.currentUser;
+if (!user) {
+alert('Please sign in to save your entry.');
+return;
+}
 
-                const morningIntentions = document.querySelector('textarea[placeholder="What\'s your focus or intention for the day?"]').value;
-                const eveningReflection = document.querySelector('textarea[placeholder="How did the day unfold? What lessons or insights emerged?"]').value;
-                const cardValue = document.getElementById('tarot-card-select').value;
-                const isReversed = document.getElementById('reversed-checkbox').checked;
+const morningIntentions = document.querySelector('textarea[placeholder="What\'s your focus or intention for the day?"]').value;
+const eveningReflection = document.querySelector('textarea[placeholder="How did the day unfold? What lessons or insights emerged?"]').value;
+const cardValue = document.getElementById('tarot-card-select').value;
 
-                const date = new Date().toLocaleDateString('en-CA'); // Use YYYY-MM-DD format
+const date = new Date().toLocaleDateString('en-CA'); // Use YYYY-MM-DD format
 
-                try {
-                    await setDoc(doc(db, 'users', user.uid, 'entries', date), {
-                        morningIntentions,
-                        eveningReflection,
-                        cardValue,
-                        isReversed,
-                        timestamp: new Date()
-                    });
-                        morningIntentions,
-                        eveningReflection,
-                        cardValue,
-                        timestamp: new Date()
-                    });
-                    alert('Entry saved successfully!');
-                } catch (error) {
-                    console.error('Error saving entry: ', error);
-                    alert('Failed to save your entry. Please try again.');
-                }
-            });
-        }
-    </script>
-    <link rel="stylesheet" href="styles.css">
+try {
+await setDoc(doc(db, 'users', user.uid, 'entries', date), {
+morningIntentions,
+eveningReflection,
+cardValue,
+timestamp: new Date()
+});
+alert('Entry saved successfully!');
+} catch (error) {
+console.error('Error saving entry: ', error);
+alert('Failed to save your entry. Please try again.');
+}
+});
+}
+</script>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>2025: A Year of Reflection and Insight</h1>
-        </header>
+<div class="container">
+<header>
+<h1>2025: A Year of Reflection and Insight</h1>
+</header>
 
-        <div class="google-signin">
-            <button id="sign-in-button">Sign in with Google</button>
-            <button id="sign-out-button" style="display: none;">Sign Out</button>
-        </div>
+<div class="google-signin">
+<button id="sign-in-button">Sign in with Google</button>
+<button id="sign-out-button" style="display: none;">Sign Out</button>
+</div>
 
-        <section id="user-info" style="display: none;">
-            <h2>Welcome to your Tarot Journal</h2>
-            <p id="user-name"></p>
-            <p id="user-email"></p>
-        </section>
+<section id="user-info" style="display: none;">
+<h2>Welcome to your Tarot Journal</h2>
+<p id="user-name"></p>
+<p id="user-email"></p>
+</section>
 
-        <div id="journal-container">
-            <section>
-                <input type="date" id="entry-date-picker" value="" oninput="loadEntryForSelectedDate()" class="cute-date-picker">
-            </section>
-            <section>
-                <h2>Tarot Card of the Day</h2>
-                <select id="tarot-card-select">
-                    <optgroup label="Major Arcana">
-                        <option value="the_fool">The Fool</option>
-                        <option value="the_magician">The Magician</option>
-                        <option value="the_high_priestess">The High Priestess</option>
-                        <option value="the_empress">The Empress</option>
-                        <option value="the_emperor">The Emperor</option>
-                        <option value="the_hierophant">The Hierophant</option>
-                        <option value="the_lovers">The Lovers</option>
-                        <option value="the_chariot">The Chariot</option>
-                        <option value="strength">Strength</option>
-                        <option value="the_hermit">The Hermit</option>
-                        <option value="wheel_of_fortune">Wheel of Fortune</option>
-                        <option value="justice">Justice</option>
-                        <option value="the_hanged_man">The Hanged Man</option>
-                        <option value="death">Death</option>
-                        <option value="temperance">Temperance</option>
-                        <option value="the_devil">The Devil</option>
-                        <option value="the_tower">The Tower</option>
-                        <option value="the_star">The Star</option>
-                        <option value="the_moon">The Moon</option>
-                        <option value="the_sun">The Sun</option>
-                        <option value="judgement">Judgement</option>
-                        <option value="the_world">The World</option>
-                    </optgroup>
-                </select>
-                <label><input type="checkbox" id="reversed-checkbox"> Reversed</label>
-                <p><img id="tarot-card-image" src="https://upload.wikimedia.org/wikipedia/commons/0/00/RWS_Tarot_00_Fool.jpg/150px-RWS_Tarot_00_Fool.jpg" alt="The Fool"></p>
-            </section>
-            <section>
-                <h2>Morning Intentions</h2>
-                <textarea rows="4" placeholder="What's your focus or intention for the day?"></textarea>
-            </section>
-            <section>
-                <h2>Evening Reflection</h2>
-                <textarea rows="4" placeholder="How did the day unfold? What lessons or insights emerged?"></textarea>
-            </section>
-            <button class="submit-button">Save Today's Entry</button>
-        </div>
-    </div>
+<div id="journal-container">
+<section>
+                <h2>Select Date to View Entries</h2>
+<input type="date" id="entry-date-picker" value="" oninput="loadEntryForSelectedDate()" class="cute-date-picker">
+                
+</section>
+<section>
+<h2>Tarot Card of the Day</h2>
+<select id="tarot-card-select">
+<optgroup label="Major Arcana">
+<option value="the_fool">The Fool</option>
+<option value="the_magician">The Magician</option>
+<option value="the_high_priestess">The High Priestess</option>
+<option value="the_empress">The Empress</option>
+<option value="the_emperor">The Emperor</option>
+<option value="the_hierophant">The Hierophant</option>
+<option value="the_lovers">The Lovers</option>
+<option value="the_chariot">The Chariot</option>
+<option value="strength">Strength</option>
+<option value="the_hermit">The Hermit</option>
+<option value="wheel_of_fortune">Wheel of Fortune</option>
+<option value="justice">Justice</option>
+<option value="the_hanged_man">The Hanged Man</option>
+<option value="death">Death</option>
+<option value="temperance">Temperance</option>
+<option value="the_devil">The Devil</option>
+<option value="the_tower">The Tower</option>
+<option value="the_star">The Star</option>
+<option value="the_moon">The Moon</option>
+<option value="the_sun">The Sun</option>
+<option value="judgement">Judgement</option>
+<option value="the_world">The World</option>
+</optgroup>
+</select>
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/0/00/RWS_Tarot_00_Fool.jpg/150px-RWS_Tarot_00_Fool.jpg" alt="The Fool"></p>
+</section>
+<section>
+<h2>Morning Intentions</h2>
+<textarea rows="4" placeholder="What's your focus or intention for the day?"></textarea>
+</section>
+<section>
+<h2>Evening Reflection</h2>
+<textarea rows="4" placeholder="How did the day unfold? What lessons or insights emerged?"></textarea>
+</section>
+<button class="submit-button">Save Today's Entry</button>
+</div>
+</div>
 </body>
 </html>
