@@ -139,57 +139,66 @@ const provider = new GoogleAuthProvider();
 const db = getFirestore(app);
 
 document.addEventListener('DOMContentLoaded', () => {
-const signInButton = document.getElementById('sign-in-button');
-const signOutButton = document.getElementById('sign-out-button');
-const userInfo = document.getElementById('user-info');
-const journal = document.getElementById('journal-container');
+    const signInButton = document.getElementById('sign-in-button');
+    const signOutButton = document.getElementById('sign-out-button');
+    const userInfo = document.getElementById('user-info');
+    const journal = document.getElementById('journal-container');
+    const reversed-checkbox = document.getElementById('reversed-checkbox');
 
-auth.onAuthStateChanged((user) => {
-if (user) {
-journal.style.display = 'block';
-userInfo.style.display = 'block';
-signInButton.style.display = 'none';
-signOutButton.style.display = 'inline-block';
-document.getElementById('user-name').textContent = `Welcome, ${user.displayName}`;
-document.getElementById('user-email').textContent = `Email: ${user.email}`;
-} else {
-journal.style.display = 'none';
-userInfo.style.display = 'none';
-signInButton.style.display = 'inline-block';
-signOutButton.style.display = 'none';
-}
-});
+    auth.onAuthStateChanged((user) => {
+    if (user) {
+    journal.style.display = 'block';
+    userInfo.style.display = 'block';
+    signInButton.style.display = 'none';
+    signOutButton.style.display = 'inline-block';
+    document.getElementById('user-name').textContent = `Welcome, ${user.displayName}`;
+    document.getElementById('user-email').textContent = `Email: ${user.email}`;
+    } else {
+    journal.style.display = 'none';
+    userInfo.style.display = 'none';
+    signInButton.style.display = 'inline-block';
+    signOutButton.style.display = 'none';
+    }
+    });
 
-signInButton.addEventListener('click', () => {
-signInWithPopup(auth, provider)
-.then((result) => {
-const user = result.user;
-journal.style.display = 'block';
-userInfo.style.display = 'block';
-signInButton.style.display = 'none';
-signOutButton.style.display = 'inline-block';
-document.getElementById('user-name').textContent = `Welcome, ${user.displayName}`;
-document.getElementById('user-email').textContent = `Email: ${user.email}`;
-})
-.catch((error) => {
-console.error('Sign-in error:', error.message);
-alert('Sign-in error: ' + error.message);
-});
-});
+    signInButton.addEventListener('click', () => {
+    signInWithPopup(auth, provider)
+    .then((result) => {
+    const user = result.user;
+    journal.style.display = 'block';
+    userInfo.style.display = 'block';
+    signInButton.style.display = 'none';
+    signOutButton.style.display = 'inline-block';
+    document.getElementById('user-name').textContent = `Welcome, ${user.displayName}`;
+    document.getElementById('user-email').textContent = `Email: ${user.email}`;
+    })
+    .catch((error) => {
+    console.error('Sign-in error:', error.message);
+    alert('Sign-in error: ' + error.message);
+    });
+    });
 
-signOutButton.addEventListener('click', () => {
-signOut(auth)
-.then(() => {
-journal.style.display = 'none';
-userInfo.style.display = 'none';
-signInButton.style.display = 'inline-block';
-signOutButton.style.display = 'none';
-})
-.catch((error) => {
-console.error('Sign-out error:', error.message);
-alert('Sign-out error: ' + error.message);
-});
-});
+    signOutButton.addEventListener('click', () => {
+    signOut(auth)
+    .then(() => {
+    journal.style.display = 'none';
+    userInfo.style.display = 'none';
+    signInButton.style.display = 'inline-block';
+    signOutButton.style.display = 'none';
+    })
+    .catch((error) => {
+    console.error('Sign-out error:', error.message);
+    alert('Sign-out error: ' + error.message);
+    });
+    });
+
+    reversed-checkbox.addEventListener('change', () => {
+        const tarotCardSelect = document.getElementById('tarot-card-select');
+        const isReversed = document.getElementById('reversed-checkbox').value;
+        alert('event listener working');
+        updateTarotCardImage(tarotCardSelect, isReversed);
+    });
+
 });
 const textCardButton = document.createElement('button');
 textCardButton.textContent = 'Text Card';
@@ -203,12 +212,6 @@ const cardName = tarotCardSelect.options[tarotCardSelect.selectedIndex].text;
 sendSMS('This day\'s tarot card is ' + tarotCardImage.src);
 });
 
-reversed-checkbox.addEventListener('change', () => {
-    const tarotCardSelect = document.getElementById('tarot-card-select');
-    const isReversed = document.getElementById('reversed-checkbox').value;
-    alert('event listener working');
-    updateTarotCardImage(tarotCardSelect, isReversed);
-});
 
 function sendSMS(message) {
 const smsLink = `sms:?&body=${encodeURIComponent(message)}`;
