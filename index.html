@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function getCardImagePath(cardValue) {
 const cardPaths = {
-'the_fool': '9/90/RWS_Tarot_00_Fool.jpg/150px-RWS_Tarot_00_Fool.jpg',
+'the_fool': '0/00/RWS_Tarot_00_Fool.jpg/150px-RWS_Tarot_00_Fool.jpg',
 'the_magician': 'f/ff/RWS_Tarot_01_Magician.jpg/150px-RWS_Tarot_01_Magician.jpg',
 'the_high_priestess': '8/88/RWS_Tarot_02_High_Priestess.jpg/150px-RWS_Tarot_02_High_Priestess.jpg',
 'the_empress': 'd/d2/RWS_Tarot_03_Empress.jpg/150px-RWS_Tarot_03_Empress.jpg',
@@ -94,6 +94,8 @@ journal.style.display = 'block';
 userInfo.style.display = 'block';
 signInButton.style.display = 'none';
 signOutButton.style.display = 'inline-block';
+document.getElementById('user-name').textContent = `Welcome, ${user.displayName}`;
+document.getElementById('user-email').textContent = `Email: ${user.email}`;
 } else {
 journal.style.display = 'none';
 userInfo.style.display = 'none';
@@ -150,6 +152,7 @@ const tarotCardSelect = document.getElementById('tarot-card-select');
 const tarotCardImage = document.querySelector('#journal-container img');
 const cardName = tarotCardSelect.options[tarotCardSelect.selectedIndex].text;
 sendSMS('Today\'s tarot card is ' + tarotCardImage.src);
+//sendSMS(`https://upload.wikimedia.org/wikipedia/commons/thumb/${getCardImagePath(cardValue)}');
 });
 
 function sendSMS(message) {
@@ -179,13 +182,12 @@ const data = docSnap.data();
 document.querySelector('textarea[placeholder="What\'s your focus or intention for the day?"]').value = data.morningIntentions;
 document.querySelector('textarea[placeholder="How did the day unfold? What lessons or insights emerged?"]').value = data.eveningReflection;
 document.getElementById('tarot-card-select').value = data.cardValue;
-document.getElementById('reversed-checkbox').checked = data.isReversed || false;
-updateTarotCardImage(data.cardValue, data.isReversed);
+updateTarotCardImage(data.cardValue);
 } else {
 document.querySelector('textarea[placeholder="What\'s your focus or intention for the day?"]').value = '';
 document.querySelector('textarea[placeholder="How did the day unfold? What lessons or insights emerged?"]').value = '';
 document.getElementById('tarot-card-select').value = 'the_fool';
-updateTarotCardImage('the_fool', false);
+updateTarotCardImage('the_fool');
 }
 } catch (error) {
 console.error('Error fetching entry: ', error);
@@ -193,13 +195,12 @@ alert('Failed to load the entry. Please try again.');
 }
 }
 
-function updateTarotCardImage(cardValue, isReversed) {
+function updateTarotCardImage(cardValue) {
 const tarotCardImage = document.querySelector('#journal-container img');
 const imagePath = getCardImagePath(cardValue);
 if (imagePath) {
 tarotCardImage.src = `https://upload.wikimedia.org/wikipedia/commons/thumb/${imagePath}`;
 tarotCardImage.alt = `${document.getElementById('tarot-card-select').options[document.getElementById('tarot-card-select').selectedIndex].text} Tarot Card`;
-tarotCardImage.style.transform = isReversed ? 'rotate(180deg)' : 'rotate(0deg)'
 } else {
 tarotCardImage.src = '';
 tarotCardImage.alt = 'Tarot Card Not Available';
@@ -207,34 +208,33 @@ tarotCardImage.alt = 'Tarot Card Not Available';
 }
 
 function initializeSaveEntry() {
-    const saveEntryButton = document.querySelector('.submit-button');
-    saveEntryButton.addEventListener('click', async () => {
-    const user = auth.currentUser;
-    if (!user) {
-    alert('Please sign in to save your entry.');
-    return;
-    }
+const saveEntryButton = document.querySelector('.submit-button');
+saveEntryButton.addEventListener('click', async () => {
+const user = auth.currentUser;
+if (!user) {
+alert('Please sign in to save your entry.');
+return;
+}
 
-    const morningIntentions = document.querySelector('textarea[placeholder="What\'s your focus or intention for the day?"]').value;
-    const eveningReflection = document.querySelector('textarea[placeholder="How did the day unfold? What lessons or insights emerged?"]').value;
-    const cardValue = document.getElementById('tarot-card-select').value;
-    const isReversed = document.getElementById('reversed-checkbox').checked;
-    const date = document.getElementById('entry-date-picker'); // Use YYYY-MM-DD format
+const morningIntentions = document.querySelector('textarea[placeholder="What\'s your focus or intention for the day?"]').value;
+const eveningReflection = document.querySelector('textarea[placeholder="How did the day unfold? What lessons or insights emerged?"]').value;
+const cardValue = document.getElementById('tarot-card-select').value;
 
-    try {
-    await setDoc(doc(db, 'users', user.uid, 'entries', date), {
-    morningIntentions,
-    eveningReflection,
-    cardValue,
-    isReversed,
-    timestamp: new Date()
-    });
-    alert('Entry saved successfully!');
-    } catch (error) {
-    console.error('Error saving entry: ', error);
-    alert('Failed to save your entry. Please try again.');
-    }
-    });
+const date = new Date().toLocaleDateString('en-CA'); // Use YYYY-MM-DD format
+
+try {
+await setDoc(doc(db, 'users', user.uid, 'entries', date), {
+morningIntentions,
+eveningReflection,
+cardValue,
+timestamp: new Date()
+});
+alert('Entry saved successfully!');
+} catch (error) {
+console.error('Error saving entry: ', error);
+alert('Failed to save your entry. Please try again.');
+}
+});
 }
 </script>
 <link rel="stylesheet" href="styles.css">
@@ -300,7 +300,7 @@ function initializeSaveEntry() {
 <h2>Evening Reflection</h2>
 <textarea rows="4" placeholder="How did the day unfold? What lessons or insights emerged?"></textarea>
 </section>
-<button class="submit-button">Save</button>
+<button class="submit-button">Save Today's Entry</button>
 </div>
 </div>
 </body>
