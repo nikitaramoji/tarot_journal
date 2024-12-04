@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const signOutButton = document.getElementById('sign-out-button');
     const userInfo = document.getElementById('user-info');
     const journal = document.getElementById('journal-container');
-    const reversed-checkbox = document.getElementById('reversed-checkbox');
+    const reversedCheckbox = document.getElementById('reversed-checkbox');
 
     auth.onAuthStateChanged((user) => {
     if (user) {
@@ -192,7 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     });
 
-    reversed-checkbox.addEventListener('change', () => {
+    reversedCheckbox.addEventListener('change', () => {
         const tarotCardSelect = document.getElementById('tarot-card-select');
         const isReversed = document.getElementById('reversed-checkbox').value;
         alert('event listener working');
