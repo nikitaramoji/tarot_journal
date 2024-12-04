@@ -152,8 +152,6 @@ document.addEventListener('DOMContentLoaded', () => {
     userInfo.style.display = 'block';
     signInButton.style.display = 'none';
     signOutButton.style.display = 'inline-block';
-    document.getElementById('user-name').textContent = `Welcome, ${user.displayName}`;
-    document.getElementById('user-email').textContent = `Email: ${user.email}`;
     } else {
     journal.style.display = 'none';
     userInfo.style.display = 'none';
@@ -170,8 +168,6 @@ document.addEventListener('DOMContentLoaded', () => {
     userInfo.style.display = 'block';
     signInButton.style.display = 'none';
     signOutButton.style.display = 'inline-block';
-    document.getElementById('user-name').textContent = `Welcome, ${user.displayName}`;
-    document.getElementById('user-email').textContent = `Email: ${user.email}`;
     })
     .catch((error) => {
     console.error('Sign-in error:', error.message);
@@ -317,17 +313,12 @@ alert('Failed to save your entry. Please try again.');
 
 <section id="user-info" style="display: none;">
 <h2>Welcome to your Tarot Journal</h2>
-<p id="user-name"></p>
-<p id="user-email"></p>
 </section>
 
 <div id="journal-container">
 <section>
-<input type="date" id="entry-date-picker" value="" oninput="loadEntryForSelectedDate()" class="cute-date-picker">
-                
-</section>
-<section>
 <h2>Tarot Card of the Day</h2>
+<input type="date" id="entry-date-picker" value="" oninput="loadEntryForSelectedDate()" class="cute-date-picker">
 <select id="tarot-card-select">
 <optgroup label="Major Arcana">
 <option value="the_fool">The Fool</option>
