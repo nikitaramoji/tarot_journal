@@ -1,6 +1,6 @@
 /* styles.css */
 body {
-    font-family: 'Avenir', serif;
+    font-family: 'Avenir', sans-serif;
     background-color: #f2f0e9;
     margin: 0;
     padding: 0;
@@ -55,7 +55,7 @@ textarea {
     margin: 10px 0;
     border: 1px solid #ccc;
     border-radius: 5px;
-    font-family: 'Avenir', serif;
+    font-family: 'Avenir', sans-serif;
 }
 textarea:focus {
     outline: 2px solid #d1a954;
@@ -113,3 +113,4 @@ optgroup[label="Cups"]
 color: yellow;
 }
 
+textarea, input { font-family: Avenir, sans-serif; }
