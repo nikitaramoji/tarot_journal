@@ -200,15 +200,7 @@ textCardButton.addEventListener('click', () => {
 const tarotCardSelect = document.getElementById('tarot-card-select');
 const tarotCardImage = document.querySelector('#journal-container img');
 const cardName = tarotCardSelect.options[tarotCardSelect.selectedIndex].text;
-sendSMS(`This day\'s tarot card is ${cardName}: ${tarotCardImage.src}`);
-});
-
-textCardButton.addEventListener('click', () => {
-const tarotCardSelect = document.getElementById('tarot-card-select');
-const tarotCardImage = document.querySelector('#journal-container img');
-const cardName = tarotCardSelect.options[tarotCardSelect.selectedIndex].text;
 sendSMS('This day\'s tarot card is ' + tarotCardImage.src);
-//sendSMS(`https://upload.wikimedia.org/wikipedia/commons/thumb/${getCardImagePath(cardValue)}');
 });
 
 function sendSMS(message) {
