@@ -1,0 +1,94 @@
+/* styles.css */
+body {
+    font-family: 'Cardo', serif;
+    background-color: #f2f0e9;
+    margin: 0;
+    padding: 0;
+    color: #2e2e2e;
+}
+.container {
+    width: 90%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    border: 2px solid #d1a954;
+}
+header {
+    text-align: center;
+    padding: 20px;
+    background-color: #d1a954;
+    color: #fff;
+    border-radius: 10px 10px 0 0;
+}
+header h1 {
+    font-family: 'Pacifico', cursive;
+    margin: 0;
+}
+.google-signin {
+    text-align: center;
+    margin: 20px 0;
+}
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #d1a954;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #b89643;
+}
+#journal-container {
+    display: none;
+}
+h2 {
+    color: #d1a954;
+}
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: 'Cardo', serif;
+}
+textarea:focus {
+    outline: 2px solid #d1a954;
+}
+.submit-button {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin-top: 20px;
+    background-color: #d1a954;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+}
+.submit-button:hover {
+    background-color: #b89643;
+}
+
+.cute-date-picker {
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #d1a954;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    color: #2e2e2e;
+    transition: box-shadow 0.3s ease-in-out, border-color 0.3s ease-in-out;
+}
+
+.cute-date-picker:focus {
+    outline: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-color: #b89643;
+}
