@@ -57,6 +57,7 @@ textarea {
     border: 1px solid #ccc;
     border-radius: 5px;
     font-family: 'Avenir', sans-serif;
+    font-size: 14px;
 }
 textarea:focus {
     outline: 2px solid #d1a954;
