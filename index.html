@@ -5,13 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2025: A Year of Reflection and Insight</title>
-    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/8/8f/Three_of_Cups%2C_Waite-Smith_Tarot_Deck%2C_Yale_University.jpg">
     <script type="module">
         import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
         document.addEventListener('DOMContentLoaded', () => {
-            const entryDatePicker = document.getElementById('entry-date-picker');
-            entryDatePicker.value = new Date().toLocaleDateString('en-CA'); // Set to current date
-            entryDatePicker.addEventListener('input', loadEntryForSelectedDate);
+            const reversedCheckbox = document.getElementById('reversed-checkbox');
+            reversedCheckbox.addEventListener('change', () => {
+                updateCardOrientation();
+            });
             initializeSaveEntry();
             auth.onAuthStateChanged(async (user) => {
                 if (user) {
@@ -26,14 +26,12 @@
             tarotCardSelect.addEventListener('change', (event) => {
                 const cardValue = event.target.value;
                 const imagePath = getCardImagePath(cardValue);
+                const tarotCardImage = document.getElementById('tarot-card-image');
                 if (imagePath) {
                     tarotCardImage.src = `https://upload.wikimedia.org/wikipedia/commons/thumb/${imagePath}`;
                     tarotCardImage.alt = `${event.target.options[event.target.selectedIndex].text} Tarot Card`;
-                } else {
-                    tarotCardImage.src = '';
-                    tarotCardImage.alt = 'Tarot Card Not Available';
-                }
-                tarotCardImage.alt = `${event.target.options[event.target.selectedIndex].text} Tarot Card`;
+                
+                updateCardOrientation();
             });
         });
 
@@ -182,6 +180,7 @@
             document.querySelector('textarea[placeholder="What\'s your focus or intention for the day?"]').value = data.morningIntentions;
             document.querySelector('textarea[placeholder="How did the day unfold? What lessons or insights emerged?"]').value = data.eveningReflection;
             document.getElementById('tarot-card-select').value = data.cardValue;
+            document.getElementById('reversed-checkbox').checked = data.isReversed || false;
             updateTarotCardImage(data.cardValue);
         } else {
             document.querySelector('textarea[placeholder="What\'s your focus or intention for the day?"]').value = '';
@@ -196,12 +195,23 @@
 }
 
 function updateTarotCardImage(cardValue) {
-    const tarotCardImage = document.querySelector('#journal-container img');
+    const tarotCardImage = document.getElementById('tarot-card-image');
     const imagePath = getCardImagePath(cardValue);
     if (imagePath) {
         tarotCardImage.src = `https://upload.wikimedia.org/wikipedia/commons/thumb/${imagePath}`;
         tarotCardImage.alt = `${document.getElementById('tarot-card-select').options[document.getElementById('tarot-card-select').selectedIndex].text} Tarot Card`;
     } else {
+        tarotCardImage.src = '';
+        tarotCardImage.alt = 'Tarot Card Not Available';
+    }
+    updateCardOrientation();
+}
+
+function updateCardOrientation() {
+    const tarotCardImage = document.getElementById('tarot-card-image');
+    const isReversed = document.getElementById('reversed-checkbox').checked;
+    tarotCardImage.style.transform = isReversed ? 'rotate(180deg)' : 'rotate(0deg)';
+} else {
         tarotCardImage.src = '';
         tarotCardImage.alt = 'Tarot Card Not Available';
     }
@@ -219,11 +229,18 @@ function updateTarotCardImage(cardValue) {
                 const morningIntentions = document.querySelector('textarea[placeholder="What\'s your focus or intention for the day?"]').value;
                 const eveningReflection = document.querySelector('textarea[placeholder="How did the day unfold? What lessons or insights emerged?"]').value;
                 const cardValue = document.getElementById('tarot-card-select').value;
+                const isReversed = document.getElementById('reversed-checkbox').checked;
 
                 const date = new Date().toLocaleDateString('en-CA'); // Use YYYY-MM-DD format
 
                 try {
                     await setDoc(doc(db, 'users', user.uid, 'entries', date), {
+                        morningIntentions,
+                        eveningReflection,
+                        cardValue,
+                        isReversed,
+                        timestamp: new Date()
+                    });
                         morningIntentions,
                         eveningReflection,
                         cardValue,
@@ -288,7 +305,8 @@ function updateTarotCardImage(cardValue) {
                         <option value="the_world">The World</option>
                     </optgroup>
                 </select>
-                <p><img src="https://upload.wikimedia.org/wikipedia/commons/0/00/RWS_Tarot_00_Fool.jpg/150px-RWS_Tarot_00_Fool.jpg" alt="The Fool"></p>
+                <label><input type="checkbox" id="reversed-checkbox"> Reversed</label>
+                <p><img id="tarot-card-image" src="https://upload.wikimedia.org/wikipedia/commons/0/00/RWS_Tarot_00_Fool.jpg/150px-RWS_Tarot_00_Fool.jpg" alt="The Fool"></p>
             </section>
             <section>
                 <h2>Morning Intentions</h2>
