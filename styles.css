@@ -92,3 +92,24 @@ textarea:focus {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     border-color: #b89643;
 }
+
+optgroup[label="Wands"]
+{
+color: purple;
+}
+
+optgroup[label="Swords"]
+{
+color: pink;
+}
+
+optgroup[label="Pentacles"]
+{
+color: cyan;
+}
+
+optgroup[label="Cups"]
+{
+color: yellow;
+}
+
