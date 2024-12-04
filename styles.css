@@ -79,6 +79,7 @@ textarea:focus {
 }
 
 .cute-date-picker {
+    padding: 10px;
     font-size: 16px;
     border: 2px solid #d1a954;
     border-radius: 10px;
