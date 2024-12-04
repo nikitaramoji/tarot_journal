@@ -241,7 +241,7 @@ document.querySelector('textarea[placeholder="What was your response to today\'s
 document.querySelector('textarea[placeholder="How did the day unfold? What lessons or insights emerged?"]').value = data.eveningReflection;
 document.getElementById('tarot-card-select').value = data.cardValue;
 document.getElementById('reversed-checkbox').value = data.isReversed;
-updateTarotCardImage(data.cardValue, isReversed);
+updateTarotCardImage(data.cardValue, data.isReversed);
 } else {
 document.querySelector('textarea[placeholder="What was your response to today\'s spread? Any thoughts going into today?"]').value = '';
 document.querySelector('textarea[placeholder="How did the day unfold? What lessons or insights emerged?"]').value = '';
