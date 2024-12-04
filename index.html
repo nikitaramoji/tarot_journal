@@ -208,7 +208,7 @@ reversed-checkbox.addEventListener('change', () => {
     const isReversed = document.getElementById('reversed-checkbox').value;
     alert('event listener working');
     updateTarotCardImage(tarotCardSelect, isReversed);
-}
+});
 
 function sendSMS(message) {
 const smsLink = `sms:?&body=${encodeURIComponent(message)}`;
