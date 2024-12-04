@@ -219,8 +219,7 @@ return;
 const morningIntentions = document.querySelector('textarea[placeholder="What\'s your focus or intention for the day?"]').value;
 const eveningReflection = document.querySelector('textarea[placeholder="How did the day unfold? What lessons or insights emerged?"]').value;
 const cardValue = document.getElementById('tarot-card-select').value;
-
-const date = new Date().toLocaleDateString('en-CA'); // Use YYYY-MM-DD format
+const date = document.getElementById('entry-date-picker'); 
 
 try {
 await setDoc(doc(db, 'users', user.uid, 'entries', date), {
@@ -300,7 +299,7 @@ alert('Failed to save your entry. Please try again.');
 <h2>Evening Reflection</h2>
 <textarea rows="4" placeholder="How did the day unfold? What lessons or insights emerged?"></textarea>
 </section>
-<button class="submit-button">Save Today's Entry</button>
+<button class="submit-button">Save</button>
 </div>
 </div>
 </body>
