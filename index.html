@@ -9,32 +9,32 @@
 <script type="module">
 import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
 document.addEventListener('DOMContentLoaded', () => {
-const entryDatePicker = document.getElementById('entry-date-picker');
-entryDatePicker.value = new Date().toLocaleDateString('en-CA'); // Set to current date
-entryDatePicker.addEventListener('input', loadEntryForSelectedDate);
-initializeSaveEntry();
-auth.onAuthStateChanged(async (user) => {
-if (user) {
-await loadEntryForSelectedDate();
-}
-});
-initializeSaveEntry();
+    const entryDatePicker = document.getElementById('entry-date-picker');
+    entryDatePicker.value = new Date().toLocaleDateString('en-CA'); // Set to current date
+    entryDatePicker.addEventListener('input', loadEntryForSelectedDate);
+    initializeSaveEntry();
+    auth.onAuthStateChanged(async (user) => {
+    if (user) {
+    await loadEntryForSelectedDate();
+    }
+    });
+    initializeSaveEntry();
 
-const tarotCardSelect = document.getElementById('tarot-card-select');
-const tarotCardImage = document.querySelector('#journal-container img');
+    const tarotCardSelect = document.getElementById('tarot-card-select');
+    const tarotCardImage = document.querySelector('#journal-container img');
 
-tarotCardSelect.addEventListener('change', (event) => {
-const cardValue = event.target.value;
-const imagePath = getCardImagePath(cardValue);
-if (imagePath) {
-tarotCardImage.src = `https://upload.wikimedia.org/wikipedia/commons/thumb/${imagePath}`;
-tarotCardImage.alt = `${event.target.options[event.target.selectedIndex].text} Tarot Card`;
-} else {
-tarotCardImage.src = '';
-tarotCardImage.alt = 'Tarot Card Not Available';
-}
-tarotCardImage.alt = `${event.target.options[event.target.selectedIndex].text} Tarot Card`;
-});
+    tarotCardSelect.addEventListener('change', (event) => {
+        const cardValue = event.target.value;
+        const imagePath = getCardImagePath(cardValue);
+        if (imagePath) {
+        tarotCardImage.src = `https://upload.wikimedia.org/wikipedia/commons/thumb/${imagePath}`;
+        tarotCardImage.alt = `${event.target.options[event.target.selectedIndex].text} Tarot Card`;
+        } else {
+        tarotCardImage.src = '';
+        tarotCardImage.alt = 'Tarot Card Not Available';
+        }
+        tarotCardImage.alt = `${event.target.options[event.target.selectedIndex].text} Tarot Card`;
+    });
 });
 
 function getCardImagePath(cardValue) {
@@ -258,7 +258,6 @@ alert('Failed to save your entry. Please try again.');
 
 <div id="journal-container">
 <section>
-                <h2>Select Date to View Entries</h2>
 <input type="date" id="entry-date-picker" value="" oninput="loadEntryForSelectedDate()" class="cute-date-picker">
                 
 </section>
