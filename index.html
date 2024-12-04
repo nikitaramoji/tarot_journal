@@ -150,7 +150,6 @@ const tarotCardSelect = document.getElementById('tarot-card-select');
 const tarotCardImage = document.querySelector('#journal-container img');
 const cardName = tarotCardSelect.options[tarotCardSelect.selectedIndex].text;
 sendSMS('Today\'s tarot card is ' + tarotCardImage.src);
-//sendSMS(`https://upload.wikimedia.org/wikipedia/commons/thumb/${getCardImagePath(cardValue)}');
 });
 
 function sendSMS(message) {
