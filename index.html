@@ -193,6 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     reversedCheckbox.addEventListener('change', () => {
+        alert('do we even get here');
         const tarotCardSelect = document.getElementById('tarot-card-select');
         const isReversed = document.getElementById('reversed-checkbox').value;
         document.querySelector('#journal-container img').style.transform = isReversed ? 'rotate(180deg)' : 'rotate(0deg)';
