@@ -193,10 +193,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     reversedCheckbox.addEventListener('change', () => {
-        alert('do we even get here');
         const tarotCardSelect = document.getElementById('tarot-card-select');
         const isReversed = document.getElementById('reversed-checkbox').value;
-        document.querySelector('#journal-container img').style.transform = 'rotate(180deg)';
+        alert(isReversed);
+        document.querySelector('#journal-container img').style.transform = isReversed ? 'rotate(180deg)' : 'rotate(0deg)';
     });
 
 });
@@ -206,10 +206,14 @@ textCardButton.className = 'submit-button';
 document.getElementById('journal-container').appendChild(textCardButton);
 
 textCardButton.addEventListener('click', () => {
-const tarotCardSelect = document.getElementById('tarot-card-select');
-const tarotCardImage = document.querySelector('#journal-container img');
-const cardName = tarotCardSelect.options[tarotCardSelect.selectedIndex].text;
-sendSMS('This day\'s tarot card is ' + tarotCardImage.src);
+    const tarotCardSelect = document.getElementById('tarot-card-select');
+    const tarotCardImage = document.querySelector('#journal-container img');
+    const cardName = tarotCardSelect.options[tarotCardSelect.selectedIndex].text;
+    if(isReversed) {
+        sendSMS('This day\'s tarot card (reversed) is ' + tarotCardImage.src);
+    } else {
+        sendSMS('This day\'s tarot card is ' + tarotCardImage.src);
+    }
 });
 
 
