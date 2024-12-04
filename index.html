@@ -195,7 +195,6 @@ document.addEventListener('DOMContentLoaded', () => {
     reversedCheckbox.addEventListener('change', () => {
         const tarotCardSelect = document.getElementById('tarot-card-select');
         const isReversed = document.getElementById('reversed-checkbox').checked;
-        alert(isReversed);
         document.querySelector('#journal-container img').style.transform = isReversed ? 'rotate(180deg)' : 'rotate(0deg)';
     });
 
@@ -209,6 +208,7 @@ textCardButton.addEventListener('click', () => {
     const tarotCardSelect = document.getElementById('tarot-card-select');
     const tarotCardImage = document.querySelector('#journal-container img');
     const cardName = tarotCardSelect.options[tarotCardSelect.selectedIndex].text;
+    const isReversed = document.getElementById('reversed-checkbox').checked;
     if(isReversed) {
         sendSMS('This day\'s tarot card (reversed) is ' + tarotCardImage.src);
     } else {
