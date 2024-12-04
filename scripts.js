@@ -82,7 +82,7 @@ async function initializeTarotCardSelection() {
 
     tarotCardSelect.addEventListener('change', (event) => {
         const cardValue = event.target.value;
-        updateTarotCardImage(cardValue, cardPaths);
+        updateTarotCardImage(cardValue, cardPaths, false);
     });
 }
 
@@ -112,10 +112,11 @@ async function loadEntryForSelectedDate() {
             document.querySelector('textarea[placeholder="What\'s your focus or intention for the day?"]').value = data.morningIntentions;
             document.querySelector('textarea[placeholder="How did the day unfold? What lessons or insights emerged?"]').value = data.eveningReflection;
             document.getElementById('tarot-card-select').value = data.cardValue;
-            updateTarotCardImage(data.cardValue, cardPaths);
+            document.getElementById('reversed-checkbox').checked = data.isReversed || false;
+            updateTarotCardImage(data.cardValue, cardPaths, data.isReversed);
         } else {
             clearEntryFields();
-            updateTarotCardImage('the_fool', cardPaths);
+            updateTarotCardImage('the_fool', cardPaths, false);
         }
     } catch (error) {
         console.error('Error fetching entry: ', error);
@@ -123,13 +124,14 @@ async function loadEntryForSelectedDate() {
     }
 }
 
-function updateTarotCardImage(cardValue, cardPaths) {
+function updateTarotCardImage(cardValue, cardPaths, isReversed) {
     const tarotCardImage = document.querySelector('#journal-container img');
     if (!tarotCardImage) return;
     const imagePath = cardPaths[cardValue];
     if (imagePath) {
         tarotCardImage.src = `https://upload.wikimedia.org/wikipedia/commons/thumb/${imagePath}`;
         tarotCardImage.alt = `${cardValue} Tarot Card`;
+        tarotCardImage.style.transform = isReversed ? 'rotate(180deg)' : 'rotate(0deg)'
     } else {
         tarotCardImage.src = '';
         tarotCardImage.alt = 'Tarot Card Not Available';
@@ -140,6 +142,7 @@ function clearEntryFields() {
     document.querySelector('textarea[placeholder="What\'s your focus or intention for the day?"]').value = '';
     document.querySelector('textarea[placeholder="How did the day unfold? What lessons or insights emerged?"]').value = '';
     document.getElementById('tarot-card-select').value = 'the_fool';
+    document.getElementById('reversed-checkbox').value = false;
 }
 async function fetchCardPaths() {
     const response = await fetch('card_paths.htm');

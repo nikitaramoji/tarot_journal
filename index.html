@@ -220,7 +220,7 @@ function initializeSaveEntry() {
     const eveningReflection = document.querySelector('textarea[placeholder="How did the day unfold? What lessons or insights emerged?"]').value;
     const cardValue = document.getElementById('tarot-card-select').value;
     const isReversed = document.getElementById('reversed-checkbox').checked;
-    const date = new Date().toLocaleDateString('en-CA'); // Use YYYY-MM-DD format
+    const date = document.getElementById('entry-date-picker'); // Use YYYY-MM-DD format
 
     try {
     await setDoc(doc(db, 'users', user.uid, 'entries', date), {
