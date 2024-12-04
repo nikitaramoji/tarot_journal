@@ -195,7 +195,6 @@ document.addEventListener('DOMContentLoaded', () => {
     reversedCheckbox.addEventListener('change', () => {
         const tarotCardSelect = document.getElementById('tarot-card-select');
         const isReversed = document.getElementById('reversed-checkbox').value;
-        alert('event listener working');
         updateTarotCardImage(tarotCardSelect, isReversed);
     });
 
@@ -257,6 +256,8 @@ alert('Failed to load the entry. Please try again.');
 function updateTarotCardImage(cardValue, isReversed) {
 const tarotCardImage = document.querySelector('#journal-container img');
 const imagePath = getCardImagePath(cardValue);
+alert('imagePath is ' + imagePath);
+alert('tarotCardImage is ' + tarotCardImage);
 if (imagePath) {
 tarotCardImage.src = `https://upload.wikimedia.org/wikipedia/commons/thumb/${imagePath}`;
 tarotCardImage.alt = `${document.getElementById('tarot-card-select').options[document.getElementById('tarot-card-select').selectedIndex].text} Tarot Card`;
