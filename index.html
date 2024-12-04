@@ -30,10 +30,7 @@
                 if (imagePath) {
                     tarotCardImage.src = `https://upload.wikimedia.org/wikipedia/commons/thumb/${imagePath}`;
                     tarotCardImage.alt = `${event.target.options[event.target.selectedIndex].text} Tarot Card`;
-                } else {
-                    tarotCardImage.src = '';
-                    tarotCardImage.alt = 'Tarot Card Not Available';
-                }
+                
                 updateCardOrientation();
             });
         });
