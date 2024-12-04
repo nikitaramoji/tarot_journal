@@ -219,7 +219,7 @@ return;
 const morningIntentions = document.querySelector('textarea[placeholder="What\'s your focus or intention for the day?"]').value;
 const eveningReflection = document.querySelector('textarea[placeholder="How did the day unfold? What lessons or insights emerged?"]').value;
 const cardValue = document.getElementById('tarot-card-select').value;
-const date = document.getElementById('entry-date-picker'); 
+const date = document.getElementById('entry-date-picker').value; 
 
 try {
 await setDoc(doc(db, 'users', user.uid, 'entries', date), {
