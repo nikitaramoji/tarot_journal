@@ -136,7 +136,7 @@ alert('Sign-out error: ' + error.message);
 });
 });
 const textCardButton = document.createElement('button');
-textCardButton.textContent = 'Text Today\'s Card';
+textCardButton.textContent = 'Text Card';
 textCardButton.className = 'submit-button';
 document.getElementById('journal-container').appendChild(textCardButton);
 
@@ -144,14 +144,14 @@ textCardButton.addEventListener('click', () => {
 const tarotCardSelect = document.getElementById('tarot-card-select');
 const tarotCardImage = document.querySelector('#journal-container img');
 const cardName = tarotCardSelect.options[tarotCardSelect.selectedIndex].text;
-sendSMS(`Today's tarot card is ${cardName}: ${tarotCardImage.src}`);
+sendSMS(`This day\'s tarot card is ${cardName}: ${tarotCardImage.src}`);
 });
 
 textCardButton.addEventListener('click', () => {
 const tarotCardSelect = document.getElementById('tarot-card-select');
 const tarotCardImage = document.querySelector('#journal-container img');
 const cardName = tarotCardSelect.options[tarotCardSelect.selectedIndex].text;
-sendSMS('Today\'s tarot card is ' + tarotCardImage.src);
+sendSMS('This day\'s tarot card is ' + tarotCardImage.src);
 //sendSMS(`https://upload.wikimedia.org/wikipedia/commons/thumb/${getCardImagePath(cardValue)}');
 });
 
